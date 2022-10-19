@@ -1,0 +1,19 @@
+- see to correct rotation also in gaussians mixture model 
+- ?????? find the correct window for smoothing the data with the gaussian ???????
+
+- try to descretize the space of [0, 2PI]
+
+
+- riguardare algo della rotazione per trovare l'intervallo piu lungo e ruotare meglio i valori 
+    - devono ruotare anche per la mistura di gaussiane
+
+
+
+- costruire un pdf definito dai risultati delle batterie
+    - c'è qualche errore nel framework per cui non si riesce a leggere i vari dataset 
+        in alcune batterie, aggiustare
+    - aggiustare annotazione per la PCA in 2D
+    - aggiungere più batterie
+- algoritmi per la stima di k -> studio e confronto     
+
+- rendere il cancolo degli indici parallelo tra di loro
