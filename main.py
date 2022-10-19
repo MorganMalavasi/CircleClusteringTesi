@@ -44,10 +44,12 @@ def main():
     
 
     batteries_names = clustbench.get_battery_names(path=data_path)
+    
     print(batteries_names)
     # loop on all the groups of datasets
     for eachBatteryName in batteries_names:
-        # eachBatteryName = batteries_names[6]
+        if eachBatteryName == "g2mg" or eachBatteryName == "h2mg":
+            continue
         print(eachBatteryName)
         # loop on each dataset in the battery
         battery = my_get_dataset_names(eachBatteryName)
@@ -58,7 +60,7 @@ def main():
             X = benchmark.data
             y_true = benchmark.labels[0]
         
-            if len(X) > 1000:       # max limit size of points
+            if len(X) > 5000:       # max limit size of points
                 continue
             
             correct_number_of_clusters = max(y_true)
@@ -66,64 +68,29 @@ def main():
             print("- {0}".format(eachDatasetName))
             print("Dataset size {0}".format(len(X)))
 
-            # try:
-            figures = []
-            figures.append((
-                data_plot.doPCA(
-                    X = X, 
-                    labels = y_true, 
-                    dataset_name = eachDatasetName, 
-                    isExample=True
-                ), ""
+            try:
+                figures = []
+                figures.append((
+                    data_plot.doPCA(
+                        X = X, 
+                        labels = y_true, 
+                        dataset_name = eachDatasetName, 
+                        isExample=True
+                    ), ""
+                    )
                 )
-            )
 
-            # Circle Clustering
-            executeClusteringFunction(1, X, eachDatasetName, "CircleClustering", figures, correct_number_of_clusters, y_true)
-            # k-means
-            executeClusteringFunction(2, X, eachDatasetName, "KMeans", figures, correct_number_of_clusters, y_true)
-            # affinity propagation
-            executeClusteringFunction(3, X, eachDatasetName, "AffinityPropagation", figures, correct_number_of_clusters, y_true)
-            # mean shift
-            executeClusteringFunction(4, X, eachDatasetName, "MeanShift", figures, correct_number_of_clusters, y_true)
-            # genie
-            executeClusteringFunction(5, X, eachDatasetName, "Genie", figures, correct_number_of_clusters, y_true)
+                for i in range(10):
+                    executeClusteringFunction(i+1, X, eachDatasetName, figures, correct_number_of_clusters, y_true)
 
-            # hierarchical clustering
-            # - ward
-            # - average linkage
-            # - complete linkage
-            # - ward linkage
-
-            # dbscan
-
-            # optics
-
-            # birch
-
-            # spectral clustering
-
-            # dbscan
-
-            # optics
-                
-
-            all_figures.append((figures, eachDatasetName, X.shape[0], X.shape[1], correct_number_of_clusters))
+                all_figures.append((figures, eachDatasetName, X.shape[0], X.shape[1], correct_number_of_clusters))
             
-            '''
             except Exception:
                 print("Si è verificata un'eccezione : ")
                 print(Exception)
-                print(Exception.__call__)
                 continue
-            '''
 
         data_plot.figures_to_html(all_figures, eachBatteryName)
-        break
-
-
-
-
 
 
 '''
@@ -185,7 +152,7 @@ def doClustering(whatClustering, correct_number_of_clusters, X, queue):
 '''
 
 
-def executeClusteringFunction(number, X, dataset_name, name, figures, correct_number_of_clusters, y_true):
+def executeClusteringFunction(number, X, dataset_name, figures, correct_number_of_clusters, y_true):
     if number == 1:
         name = "CircleClustering"
         res = engine.CircleClustering(X) + 1
@@ -193,14 +160,31 @@ def executeClusteringFunction(number, X, dataset_name, name, figures, correct_nu
         name = "KMeans"
         res = clustering_sklearn.KMeans(correct_number_of_clusters).fit(X).labels_ + 1
     elif number == 3:
-        name = "Affinity Propagation"
-        res = clustering_sklearn.AffinityPropagation().fit(X).labels_ + 1
+        name = "Spectral Clustering"
+        res = clustering_sklearn.SpectralClustering(n_clusters=correct_number_of_clusters).fit(X).labels_ + 1
     elif number == 4:
+        name = "Agglomerative Clustering (Ward)"
+        res = clustering_sklearn.AgglomerativeClustering(n_clusters=correct_number_of_clusters).fit(X).labels_ + 1
+    elif number == 5:
+        name = "DBSCAN"
+        res = clustering_sklearn.DBSCAN().fit_predict(X) + 1
+    elif number == 6:
         name = "Meanshift"
         res = clustering_sklearn.MeanShift().fit(X).labels_ + 1
-    elif number == 5:
+    elif number == 7:
+        name = "OPTICS"
+        res = clustering_sklearn.OPTICS().fit(X).labels_ + 1
+    elif number == 8:
+        name = "Birch"
+        res = clustering_sklearn.Birch(n_clusters=correct_number_of_clusters).fit(X).predict(X) + 1
+    elif number == 9:
         name = "Genie"
         res = genieclust.Genie(n_clusters=correct_number_of_clusters).fit_predict(X) + 1
+    elif number == 10:
+        name = "Affinity Propagation"
+        res = clustering_sklearn.AffinityPropagation().fit(X).labels_ + 1
+    else:
+        return
 
     adjusted_rand_score = metrics.adjusted_rand_score(y_true, res)
     adjusted_mutual_info_score = metrics.adjusted_mutual_info_score(y_true, res)

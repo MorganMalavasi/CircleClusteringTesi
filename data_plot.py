@@ -353,5 +353,5 @@ def figures_to_html(figs, batteryname="dashboard.html"):
                 inner_html = figure.to_html().split('<body>')[1].split('</body>')[0]
                 dashboard.write(inner_html)
                 dashboard.write("<h4 style=\"padding-left: 45;\">{0}</h1>\n".format(comment))
-            dashboard.write("<HR WIDTH=\"90%\" COLOR=\"#6699FF\" SIZE=\"6\">")
+            dashboard.write("<HR WIDTH=\"100%\" COLOR=\"#000000\" SIZE=\"8\">")
         dashboard.write("</body></html>" + "\n")

@@ -10,10 +10,10 @@
 
 
 - costruire un pdf definito dai risultati delle batterie
-    - c'è qualche errore nel framework per cui non si riesce a leggere i vari dataset 
-        in alcune batterie, aggiustare
-    - aggiustare annotazione per la PCA in 2D
-    - aggiungere più batterie
+    - fare una run complessiva 
+    - aggiungere altri algoritmi
+    - bug eccezione in graves
+
 - algoritmi per la stima di k -> studio e confronto     
 
 - rendere il cancolo degli indici parallelo tra di loro
