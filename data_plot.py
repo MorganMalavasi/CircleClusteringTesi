@@ -1,10 +1,10 @@
+from fileinput import filename
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 from matplotlib.widgets import CheckButtons
 from sklearn.decomposition import PCA
 from scipy.stats import norm
@@ -23,28 +23,51 @@ def doPCA(X, labels, dataset_name = None, algorithm_name = None, comment = None,
         pca = PCA(n_components=2)
         components = pca.fit_transform(X)
         fig = px.scatter(components, x = 0, y = 1, title = 'Blobs', color=labels, labels={'0': 'PC 1', '1': 'PC 2'})
-
-    fig.update_layout(
-        width = 1000,
-        height = 600,
-        title = 'Dataset name {0} - algorithm {1} - samples = {2} - features = {3} - classes = {3}'.format(dataset_name, algorithm_name, X.shape[0], X.shape[1], np.max(labels))
+    
+    if not isExample:
+        fig.update_layout(
+            width = 1000,
+            height = 600,
+            title = 'Algorithm {0} - classes = {1}'.format(algorithm_name, int(max(labels)))
+        )
+    else:
+        fig.update_layout(
+            width = 1000,
+            height = 600,
+            title = ''
     )
+    
     fig.update_yaxes(
         scaleanchor = "x",
         scaleratio = 1
     )
     
+    '''
     if not isExample:
-        fig.add_annotation(
-            text=comment,
-            x = -0.04,
-            y = -0.1,
-            font=dict(
-                family="Times New Roman",
-                size=20
-            ),
-            showarrow=False
-        )
+        if X.shape[1] > 2:
+            fig.add_annotation(
+                text=comment,
+                x = -0.04,
+                y = -0.1,
+                font=dict(
+                    family="Times New Roman",
+                    size=20
+                ),
+                showarrow=False
+            )
+        else:
+            fig.add_annotation(
+                text=comment,
+                x = -0.04,
+                y = -2.9,
+                font=dict(
+                    family="Times New Roman",
+                    size=20
+                ),
+                showarrow=False
+            )
+    '''
+            
     return fig
 
 
@@ -310,14 +333,25 @@ def drawMixtureOfGaussians(theta, bins, gmm):
 
     return (None, None, None)
 
-def figures_to_html(figs, filename="dashboard.html"):
+def figures_to_html(figs, batteryname="dashboard.html"): 
+    filename = "../dashboards/" + batteryname + ".html"
     with open(filename, 'w') as dashboard:
         dashboard.write("<html><head></head><body>" + "\n")
+        dashboard.write("<h1 style=\"padding-left: 45;\">Battery = " + batteryname + "</h1>")
+
         for eachDataset in figs:
             nameDataset = eachDataset[1]
-            dashboard.write("<h1 style=\"padding-left: 45;\">{0}</h1>\n".format(nameDataset))
+            numberOfSamples = eachDataset[2]
+            numberOfFeatures = eachDataset[3]
+            classes = eachDataset[4]
+            dashboard.write("<h2 style=\"padding-left: 45;\">Dataset name => {0}</h2>\n".format(nameDataset))
+            dashboard.write("<h3 style=\"padding-left: 45;\">Samples = {0}, Features = {1}, Classes = {2}</h1>\n".format(numberOfSamples, numberOfFeatures, classes))
+            
             for fig in eachDataset[0]:
-                inner_html = fig.to_html().split('<body>')[1].split('</body>')[0]
+                figure = fig[0]
+                comment = fig[1]
+                inner_html = figure.to_html().split('<body>')[1].split('</body>')[0]
                 dashboard.write(inner_html)
+                dashboard.write("<h4 style=\"padding-left: 45;\">{0}</h1>\n".format(comment))
             dashboard.write("<HR WIDTH=\"90%\" COLOR=\"#6699FF\" SIZE=\"6\">")
         dashboard.write("</body></html>" + "\n")

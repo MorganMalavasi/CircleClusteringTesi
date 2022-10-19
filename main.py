@@ -47,6 +47,7 @@ def main():
     print(batteries_names)
     # loop on all the groups of datasets
     for eachBatteryName in batteries_names:
+        # eachBatteryName = batteries_names[6]
         print(eachBatteryName)
         # loop on each dataset in the battery
         battery = my_get_dataset_names(eachBatteryName)
@@ -57,7 +58,7 @@ def main():
             X = benchmark.data
             y_true = benchmark.labels[0]
         
-            if len(X) > 400:       # max limit size of points
+            if len(X) > 1000:       # max limit size of points
                 continue
             
             correct_number_of_clusters = max(y_true)
@@ -65,53 +66,59 @@ def main():
             print("- {0}".format(eachDatasetName))
             print("Dataset size {0}".format(len(X)))
 
-            try:
-                figures = []
-                figures.append(data_plot.doPCA(
-                        X = X, 
-                        labels = y_true, 
-                        dataset_name = eachDatasetName, 
-                        isExample=True
-                    )
+            # try:
+            figures = []
+            figures.append((
+                data_plot.doPCA(
+                    X = X, 
+                    labels = y_true, 
+                    dataset_name = eachDatasetName, 
+                    isExample=True
+                ), ""
                 )
+            )
 
-                # Circle Clustering
-                executeClusteringFunction(1, X, eachDatasetName, "CircleClustering", figures, correct_number_of_clusters, y_true)
-                # k-means
-                executeClusteringFunction(2, X, eachDatasetName, "KMeans", figures, correct_number_of_clusters, y_true)
-                # affinity propagation
-                executeClusteringFunction(3, X, eachDatasetName, "AffinityPropagation", figures, correct_number_of_clusters, y_true)
-                # mean shift
-                executeClusteringFunction(4, X, eachDatasetName, "MeanShift", figures, correct_number_of_clusters, y_true)
-                # genie
-                executeClusteringFunction(5, X, eachDatasetName, "Genie", figures, correct_number_of_clusters, y_true)
+            # Circle Clustering
+            executeClusteringFunction(1, X, eachDatasetName, "CircleClustering", figures, correct_number_of_clusters, y_true)
+            # k-means
+            executeClusteringFunction(2, X, eachDatasetName, "KMeans", figures, correct_number_of_clusters, y_true)
+            # affinity propagation
+            executeClusteringFunction(3, X, eachDatasetName, "AffinityPropagation", figures, correct_number_of_clusters, y_true)
+            # mean shift
+            executeClusteringFunction(4, X, eachDatasetName, "MeanShift", figures, correct_number_of_clusters, y_true)
+            # genie
+            executeClusteringFunction(5, X, eachDatasetName, "Genie", figures, correct_number_of_clusters, y_true)
 
-                # hierarchical clustering
-                # - ward
-                # - average linkage
-                # - complete linkage
-                # - ward linkage
+            # hierarchical clustering
+            # - ward
+            # - average linkage
+            # - complete linkage
+            # - ward linkage
 
-                # dbscan
+            # dbscan
 
-                # optics
+            # optics
 
-                # birch
+            # birch
 
-                # spectral clustering
+            # spectral clustering
 
-                # dbscan
+            # dbscan
 
-                # optics
-                    
+            # optics
+                
 
-                all_figures.append((figures, eachDatasetName))
+            all_figures.append((figures, eachDatasetName, X.shape[0], X.shape[1], correct_number_of_clusters))
+            
+            '''
             except Exception:
                 print("Si è verificata un'eccezione : ")
                 print(Exception)
+                print(Exception.__call__)
                 continue
+            '''
 
-        data_plot.figures_to_html(all_figures)
+        data_plot.figures_to_html(all_figures, eachBatteryName)
         break
 
 
@@ -198,7 +205,7 @@ def executeClusteringFunction(number, X, dataset_name, name, figures, correct_nu
     adjusted_rand_score = metrics.adjusted_rand_score(y_true, res)
     adjusted_mutual_info_score = metrics.adjusted_mutual_info_score(y_true, res)
 
-    figures.append(
+    figures.append((
         data_plot.doPCA(
             X = X,
             labels = res,
@@ -206,6 +213,8 @@ def executeClusteringFunction(number, X, dataset_name, name, figures, correct_nu
             algorithm_name = name, 
             comment =  "Score algorithm : adjusted_rand_score = {1} , adjusted_mutual_info_score = {2}".format(res[1], round(adjusted_rand_score, 4), round(adjusted_mutual_info_score, 4)),
             isExample = False
+        ), 
+            "Score algorithm : adjusted_rand_score = {1} , adjusted_mutual_info_score = {2}".format(res[1], round(adjusted_rand_score, 4), round(adjusted_mutual_info_score, 4))
         )
     )
 
