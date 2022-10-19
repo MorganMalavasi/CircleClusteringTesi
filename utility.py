@@ -244,7 +244,7 @@ def find_max_repeating_number_in_array_using_count(arr):
     return clusters
 
 def my_get_dataset_names(batteryName):
-    nameInitDir = "clustering-data-v1-1.1.0"
+    nameInitDir = "../clustering-data-v1-1.1.0"
     nameDir = nameInitDir + '/' + batteryName
     listOfFiles = os.listdir(nameDir)
 

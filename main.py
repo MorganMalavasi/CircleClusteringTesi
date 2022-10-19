@@ -40,7 +40,7 @@ def main():
 
     """
 
-    data_path = os.path.join("clustering-data-v1-1.1.0")
+    data_path = os.path.join("../clustering-data-v1-1.1.0")
     
 
     batteries_names = clustbench.get_battery_names(path=data_path)
