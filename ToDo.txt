@@ -1,19 +1,19 @@
-- see to correct rotation also in gaussians mixture model 
-- ?????? find the correct window for smoothing the data with the gaussian ???????
-
-- try to descretize the space of [0, 2PI]
+CRITICAL
+- costruire un risultato finale che mostri come si è comportato l'algoritmo in generale
 
 
+HIGH
 - riguardare algo della rotazione per trovare l'intervallo piu lungo e ruotare meglio i valori 
     - devono ruotare anche per la mistura di gaussiane
 
 
-
-- costruire un pdf definito dai risultati delle batterie
-    - fare una run complessiva 
-    - aggiungere altri algoritmi
-    - bug eccezione in graves
-
+MEDIUM
 - algoritmi per la stima di k -> studio e confronto     
 
+
+LOW
+- implementazione della gaussiana di smoothing
+
 - rendere il cancolo degli indici parallelo tra di loro
+
+- discretizzazione dei valori tra [0, 2pi] nel core dell'algoritmo
