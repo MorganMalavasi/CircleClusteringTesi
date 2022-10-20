@@ -1,6 +1,7 @@
 from fileinput import filename
 import numpy as np
 import pandas as pd
+import utility
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
@@ -339,19 +340,39 @@ def figures_to_html(figs, batteryname="dashboard.html"):
         dashboard.write("<html><head></head><body>" + "\n")
         dashboard.write("<h1 style=\"padding-left: 45;\">Battery = " + batteryname + "</h1>")
 
+
+        # looping on the datasets
+        results = []
         for eachDataset in figs:
             nameDataset = eachDataset[1]
             numberOfSamples = eachDataset[2]
             numberOfFeatures = eachDataset[3]
             classes = eachDataset[4]
             dashboard.write("<h2 style=\"padding-left: 45;\">Dataset name => {0}</h2>\n".format(nameDataset))
-            dashboard.write("<h3 style=\"padding-left: 45;\">Samples = {0}, Features = {1}, Classes = {2}</h1>\n".format(numberOfSamples, numberOfFeatures, classes))
+            dashboard.write("<h3 style=\"padding-left: 45;\">Samples = {0}, Features = {1}, Classes = {2}</h3>\n".format(numberOfSamples, numberOfFeatures, classes))
             
+            # looping on the algorithm results foreach dataset
+            info = []
             for fig in eachDataset[0]:
-                figure = fig[0]
-                comment = fig[1]
+                name = fig[0]
+                figure = fig[1]
+                comment = fig[2]
+                adjusted_rand_score = fig[3]
+                adjusted_mutual_info_score = fig[4]
                 inner_html = figure.to_html().split('<body>')[1].split('</body>')[0]
                 dashboard.write(inner_html)
-                dashboard.write("<h4 style=\"padding-left: 45;\">{0}</h1>\n".format(comment))
+                dashboard.write("<h4 style=\"padding-left: 45;\">{0}</h4>\n".format(comment))
+                info.append((name, adjusted_rand_score, adjusted_mutual_info_score))
+            
+            # printing the results of the dataset
+            string_best, string_worst = utility.print_results_single_dataset(info)
+            dashboard.write(string_best)
+            dashboard.write(string_worst)
             dashboard.write("<HR WIDTH=\"100%\" COLOR=\"#000000\" SIZE=\"8\">")
+            # save the results 
+            results.append((nameDataset, info))
+
+            
+        
+        dashboard.write(utility.print_results_total_datasets(results))
         dashboard.write("</body></html>" + "\n")

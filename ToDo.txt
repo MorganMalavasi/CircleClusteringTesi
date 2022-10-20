@@ -8,8 +8,8 @@ HIGH
 
 
 MEDIUM
+- implementare pulsante a fianco dei risultati del Circle Clustering che mostri come si è mosso l'algoritmo -> difficile
 - algoritmi per la stima di k -> studio e confronto     
-
 
 LOW
 - implementazione della gaussiana di smoothing

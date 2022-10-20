@@ -254,3 +254,26 @@ def my_get_dataset_names(batteryName):
             listOfDatasets.append(file.replace('.data.gz', ''))
 
     return listOfDatasets
+
+
+def print_results_single_dataset(info):
+    string_best = ""
+    string_worst = ""
+    for i in info:
+        name = i[0]
+        if name == "CircleClustering":
+            score_rand_circle_clustering = i[1]
+            score_mutual_circle_clustering = i[2]
+
+            # find where the algorithm has performed best respect other clustering methodss
+            for eachOtherDataset in info:
+                if eachOtherDataset[0] != None and eachOtherDataset[0] != "CircleClustering":
+                    if score_rand_circle_clustering > eachOtherDataset[1]:
+                        string_best = string_best + " " + eachOtherDataset[0] + ","
+                    else:
+                        string_worst = string_worst + " " + eachOtherDataset[0] + ","
+
+    return "<h4 style=\"padding-left: 45;\">CircleClustering >{0}</h1>\n".format(string_best), "<h4 style=\"padding-left: 45;\">CircleClustering <{0}</h1>\n".format(string_worst)
+
+def print_results_total_datasets(results):
+    return ""

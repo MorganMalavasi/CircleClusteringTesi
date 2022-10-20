@@ -60,7 +60,7 @@ def main():
             X = benchmark.data
             y_true = benchmark.labels[0]
         
-            if len(X) > 5000:       # max limit size of points
+            if len(X) > 400:       # max limit size of points
                 continue
             
             correct_number_of_clusters = max(y_true)
@@ -71,12 +71,16 @@ def main():
             try:
                 figures = []
                 figures.append((
+                    None,
                     data_plot.doPCA(
                         X = X, 
                         labels = y_true, 
                         dataset_name = eachDatasetName, 
                         isExample=True
-                    ), ""
+                    ), 
+                    "",
+                    None,
+                    None
                     )
                 )
 
@@ -91,7 +95,7 @@ def main():
                 continue
 
         data_plot.figures_to_html(all_figures, eachBatteryName)
-
+        break
 
 '''
     battery, dataset = "wut", "x2"
@@ -190,6 +194,7 @@ def executeClusteringFunction(number, X, dataset_name, figures, correct_number_o
     adjusted_mutual_info_score = metrics.adjusted_mutual_info_score(y_true, res)
 
     figures.append((
+        name,
         data_plot.doPCA(
             X = X,
             labels = res,
@@ -198,7 +203,9 @@ def executeClusteringFunction(number, X, dataset_name, figures, correct_number_o
             comment =  "Score algorithm : adjusted_rand_score = {1} , adjusted_mutual_info_score = {2}".format(res[1], round(adjusted_rand_score, 4), round(adjusted_mutual_info_score, 4)),
             isExample = False
         ), 
-            "Score algorithm : adjusted_rand_score = {1} , adjusted_mutual_info_score = {2}".format(res[1], round(adjusted_rand_score, 4), round(adjusted_mutual_info_score, 4))
+        "Score algorithm : adjusted_rand_score = {1} , adjusted_mutual_info_score = {2}".format(res[1], round(adjusted_rand_score, 4), round(adjusted_mutual_info_score, 4)), 
+        adjusted_rand_score,
+        adjusted_mutual_info_score
         )
     )
 
