@@ -166,7 +166,8 @@ def plot_circle(theta, label=None, radius=500):
     fig.update_xaxes(title='', range=[-M, M])
     fig.update_yaxes(title='', range=[-M, M])
     fig.update_layout(title='clusters', width=radius, height=radius)
-    fig.show()
+    # fig.show()
+    return fig
 
 def smooth(x, window_len=11, window='hanning'):
 
@@ -236,7 +237,8 @@ def plot_scatter(hist, bins, mode=0, smooth_wlen=None):
         hist = smooth(hist, window_len=smooth_wlen, window='hanning')
 
     figh = go.Figure(data=go.Scatter(x=bins, y=hist, mode=mode_line))
-    figh.show()
+    # figh.show()
+    return figh
 
 def plot_hist(hist, bins):
 
@@ -362,6 +364,8 @@ def figures_to_html(figs, batteryname="dashboard.html"):
                 inner_html = figure.to_html().split('<body>')[1].split('</body>')[0]
                 dashboard.write(inner_html)
                 dashboard.write("<h4 style=\"padding-left: 45;\">{0}</h4>\n".format(comment))
+                if name == "CircleClustering":
+                    dashboard.write("<a style=\"padding-left: 45;\" href=\"fcps/1.html\">Show job</a>")
                 info.append((name, adjusted_rand_score, adjusted_mutual_info_score))
             
             # printing the results of the dataset

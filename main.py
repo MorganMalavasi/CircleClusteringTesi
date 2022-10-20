@@ -60,7 +60,7 @@ def main():
             X = benchmark.data
             y_true = benchmark.labels[0]
         
-            if len(X) > 5000:       # max limit size of points
+            if len(X) > 400:       # max limit size of points
                 continue
             
             correct_number_of_clusters = max(y_true)
@@ -159,7 +159,7 @@ def doClustering(whatClustering, correct_number_of_clusters, X, queue):
 def executeClusteringFunction(number, X, dataset_name, figures, correct_number_of_clusters, y_true):
     if number == 1:
         name = "CircleClustering"
-        res = engine.CircleClustering(X) + 1
+        res, plots = engine.CircleClustering(X)
     elif number == 2:
         name = "KMeans"
         res = clustering_sklearn.KMeans(correct_number_of_clusters).fit(X).labels_ + 1

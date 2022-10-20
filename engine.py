@@ -19,6 +19,9 @@ PI = np.float32(PI)
 
 '''CIRCLE CLUSTERING'''
 def CircleClustering(samples, labels = None, n_dataset = None):
+
+    saver_plots = []
+
     numberOfSamplesInTheDataset = samples.shape[0]
     theta = 2 * PI * np.random.rand(numberOfSamplesInTheDataset)
     matrixOfWeights, S, C = cc.computing_weights(samples, theta, cosine = False)
@@ -29,12 +32,12 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     # data_plot.doPCA(samples, labels, n_dataset)
 
     # PLOTTING THE THETA
-    # data_plot.plot_circle(theta)
+    saver_plots.append(data_plot.plot_circle(theta))
 
     hist, bins = utility.histogram(theta, nbins=numberOfBinsFreedmanDiaconisRuleModified(theta))
 
     # PLOTTING THE SCATTER
-    # data_plot.plot_scatter(hist, bins, mode=2)
+    saver_plots = data_plot.plot_scatter(hist, bins, mode=2)
     # data_plot.plot_hist(hist, bins)
     # data_plot.plot_linespace(theta)
     # //////////////////////////////////////////////////////////////////
@@ -58,4 +61,4 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     # data_plot.plot_circle(theta, thetaLabels)
 
     # return (thetaLabels, gaussianMixtureLabels)
-    return thetaLabels
+    return gaussianMixtureLabels + 1, saver_plots
