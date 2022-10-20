@@ -276,4 +276,43 @@ def print_results_single_dataset(info):
     return "<h4 style=\"padding-left: 45;\">CircleClustering >{0}</h1>\n".format(string_best), "<h4 style=\"padding-left: 45;\">CircleClustering <{0}</h1>\n".format(string_worst)
 
 def print_results_total_datasets(results):
-    return ""
+    table_rand_score = build_table_results(results)
+    strings = []    
+    for algorithm_result in range(1, table_rand_score.shape[1]):
+        nameAlgorithmEvaluated = table_rand_score[0, algorithm_result, 0]
+        counter = 0
+        for i in range(table_rand_score.shape[0]):
+            tuple_circle_clustering = table_rand_score[i, 0]
+            nameCircleClustering = tuple_circle_clustering[0]
+            scoreCircleClustering = tuple_circle_clustering[1]
+
+            tuple_result_alg = table_rand_score[i, algorithm_result]
+            name = tuple_result_alg[0]
+            score = tuple_result_alg[1]
+            if scoreCircleClustering > score:
+                counter += 1
+                
+        percentual = round((counter/table_rand_score.shape[0]) * 100, 2)
+        strings.append("<h3 style=\"padding-left: 45;\">The algorithm beated {0} {1}".format(nameAlgorithmEvaluated, percentual) + "%" + " of the times></h3>\n")
+    return strings
+        
+def build_table_results(results):
+    table = []
+    for dataset in results:
+        nameDSET = dataset[0]
+        run = dataset[1]   
+        
+        results_run = []
+        for resultOfARun in run:
+            name_algorithm = resultOfARun[0]
+            score_rand = resultOfARun[1]
+            score_mutual = resultOfARun[2]
+
+            if name_algorithm == None:
+                continue
+            else:
+                results_run.append((name_algorithm, score_rand))
+        table.append(results_run)
+
+    return np.array(table) 
+        

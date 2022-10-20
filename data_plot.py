@@ -366,13 +366,16 @@ def figures_to_html(figs, batteryname="dashboard.html"):
             
             # printing the results of the dataset
             string_best, string_worst = utility.print_results_single_dataset(info)
+            dashboard.write("<h2 style=\"padding-left: 45;\">Results dataset</h2>\n")
             dashboard.write(string_best)
             dashboard.write(string_worst)
             dashboard.write("<HR WIDTH=\"100%\" COLOR=\"#000000\" SIZE=\"8\">")
             # save the results 
             results.append((nameDataset, info))
 
-            
         
-        dashboard.write(utility.print_results_total_datasets(results))
+        dashboard.write("<h1 style=\"padding-left: 45;\"><u>Final Results</u></h1>\n")
+        strings = utility.print_results_total_datasets(results)
+        for compares in strings:
+            dashboard.write(compares)
         dashboard.write("</body></html>" + "\n")

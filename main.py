@@ -60,7 +60,7 @@ def main():
             X = benchmark.data
             y_true = benchmark.labels[0]
         
-            if len(X) > 400:       # max limit size of points
+            if len(X) > 5000:       # max limit size of points
                 continue
             
             correct_number_of_clusters = max(y_true)
