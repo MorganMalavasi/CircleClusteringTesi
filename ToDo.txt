@@ -17,3 +17,21 @@ LOW
 - rendere il cancolo degli indici parallelo tra di loro
 
 - discretizzazione dei valori tra [0, 2pi] nel core dell'algoritmo
+
+
+
+
+
+
+
+
+
+- overleaf inizio tesi -> condivido
+    - cap 1     
+- calcolo k -> calcolare stime rispetto al k fornito 
+- problema parallelizzazione on demand matrice dei pesi
+
+- variazione analisi al variare numero sample, features, numero di classi 
+- misurazione tempi sperimentali + errori rispetto alla stima di k 
+
+

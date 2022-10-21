@@ -48,7 +48,7 @@ def main():
     print(batteries_names)
     # loop on all the groups of datasets
     for eachBatteryName in batteries_names:
-        if eachBatteryName == "g2mg" or eachBatteryName == "h2mg":
+        if eachBatteryName == "g2mg" or eachBatteryName == "h2mg" or eachBatteryName == "mnist":
             continue
         print(eachBatteryName)
         # loop on each dataset in the battery
@@ -60,7 +60,7 @@ def main():
             X = benchmark.data
             y_true = benchmark.labels[0]
         
-            if len(X) > 400:       # max limit size of points
+            if len(X) > 5000:       # max limit size of points
                 continue
             
             correct_number_of_clusters = max(y_true)
@@ -95,7 +95,6 @@ def main():
                 continue
 
         data_plot.figures_to_html(all_figures, eachBatteryName)
-        break
 
 '''
     battery, dataset = "wut", "x2"
