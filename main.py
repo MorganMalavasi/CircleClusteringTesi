@@ -80,6 +80,7 @@ def main():
                     ), 
                     "",
                     None,
+                    None,
                     None
                     )
                 )
@@ -93,8 +94,9 @@ def main():
                 print("Si è verificata un'eccezione : ")
                 print(Exception)
                 continue
-
+        
         data_plot.figures_to_html(all_figures, eachBatteryName)
+        break
 
 '''
     battery, dataset = "wut", "x2"
@@ -156,6 +158,7 @@ def doClustering(whatClustering, correct_number_of_clusters, X, queue):
 
 
 def executeClusteringFunction(number, X, dataset_name, figures, correct_number_of_clusters, y_true):
+    plots = None
     if number == 1:
         name = "CircleClustering"
         res, plots = engine.CircleClustering(X)
@@ -204,7 +207,8 @@ def executeClusteringFunction(number, X, dataset_name, figures, correct_number_o
         ), 
         "Score algorithm : adjusted_rand_score = {1} , adjusted_mutual_info_score = {2}".format(res[1], round(adjusted_rand_score, 4), round(adjusted_mutual_info_score, 4)), 
         adjusted_rand_score,
-        adjusted_mutual_info_score
+        adjusted_mutual_info_score,
+        plots
         )
     )
 

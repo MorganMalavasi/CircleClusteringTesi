@@ -11,7 +11,7 @@ import data_plot
 import matplotlib.pyplot as plt
 
 
-def hierarchicalDetectionOfClusters(hist, bins, samples, theta):
+def hierarchicalDetectionOfClusters(hist, bins, samples, theta, saver_plots):
     
     #############################################################################
     # PRECOMPUTATION ############################################################
@@ -19,18 +19,18 @@ def hierarchicalDetectionOfClusters(hist, bins, samples, theta):
     
     # - removing circular problem    
     hist, binsRotated, movement = rotateHistogram(hist, bins)
-    # data_plot.plot_scatter(hist, bins, mode=2)
+    saver_plots.append(data_plot.plot_scatter(hist, bins, mode=2))
     
     # removing low percentage
     hist = removeLowPercentage(hist)
-    # data_plot.plot_scatter(hist, bins, mode=2)
+    saver_plots.append(data_plot.plot_scatter(hist, bins, mode=2))
 
     # smoothing
     standard_deviation = np.std(samples)
     # print("Window size = {0}".format(standard_deviation))
     hist = gaussian_filter1d(hist, np.std(samples))
     # hist = np.ceil(hist)
-    # data_plot.plot_scatter(hist, bins, mode=2)
+    saver_plots.append(data_plot.plot_scatter(hist, bins, mode=2))
 
     #############################################################################
     # TREE BUILDING #############################################################

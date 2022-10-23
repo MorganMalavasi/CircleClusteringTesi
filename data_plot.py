@@ -1,4 +1,4 @@
-from fileinput import filename
+import os
 import numpy as np
 import pandas as pd
 import utility
@@ -337,11 +337,15 @@ def drawMixtureOfGaussians(theta, bins, gmm):
     return (None, None, None)
 
 def figures_to_html(figs, batteryname="dashboard.html"): 
+    counter = 0
+
+    if not os.path.exists("../dashboards/" + batteryname):
+        os.makedirs("../dashboards/" + batteryname)
+
     filename = "../dashboards/" + batteryname + ".html"
     with open(filename, 'w') as dashboard:
         dashboard.write("<html><head></head><body>" + "\n")
         dashboard.write("<h1 style=\"padding-left: 45;\">Battery = " + batteryname + "</h1>")
-
 
         # looping on the datasets
         results = []
@@ -361,13 +365,27 @@ def figures_to_html(figs, batteryname="dashboard.html"):
                 comment = fig[2]
                 adjusted_rand_score = fig[3]
                 adjusted_mutual_info_score = fig[4]
+                plots = fig[5]
+
                 inner_html = figure.to_html().split('<body>')[1].split('</body>')[0]
                 dashboard.write(inner_html)
                 dashboard.write("<h4 style=\"padding-left: 45;\">{0}</h4>\n".format(comment))
                 if name == "CircleClustering":
-                    dashboard.write("<a style=\"padding-left: 45;\" href=\"fcps/1.html\">Show job</a>")
+                    dashboard.write("<a style=\"padding-left: 45;\" href=\"fcps/" + str(counter) + ".html\" target=\"_blank\">Show job</a>")
+                    fileJob = "../dashboards/" + batteryname + "/" + str(counter) + ".html"
+                    with open(fileJob, 'w') as job:
+                        job.write("<html><head></head><body>" + "\n")
+                        job.write("<h2 style=\"padding-left: 45;\">Dataset name => {0}</h2>\n".format(nameDataset))
+                        job.write("<h3 style=\"padding-left: 45;\">Samples = {0}, Features = {1}, Real classes = {2}</h3>\n".format(numberOfSamples, numberOfFeatures, classes))
+                        # cycle on the internal figures produced by the Circle Clustering
+                        for internalPlot in plots:
+                            inner_html = internalPlot.to_html().split('<body>')[1].split('</body>')[0]
+                            job.write(inner_html)
+
+                        job.write("</body></html>" + "\n")
                 info.append((name, adjusted_rand_score, adjusted_mutual_info_score))
-            
+            counter += 1
+
             # printing the results of the dataset
             string_best, string_worst = utility.print_results_single_dataset(info)
             dashboard.write("<h2 style=\"padding-left: 45;\">Results dataset</h2>\n")

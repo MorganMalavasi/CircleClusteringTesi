@@ -1,9 +1,9 @@
 CRITICAL
 - overleaf inizio tesi -> condivido
     - cap 1     
-- costruire un risultato finale che mostri come si è comportato l'algoritmo in generale
 - calcolo k -> calcolare stime rispetto al k fornito 
 - problema parallelizzazione on demand matrice dei pesi
+- rendere gli indici veloci (complesso su R)
 
 HIGH
 - riguardare algo della rotazione per trovare l'intervallo piu lungo e ruotare meglio i valori 
@@ -13,7 +13,6 @@ HIGH
 
 
 MEDIUM
-- implementare pulsante a fianco dei risultati del Circle Clustering che mostri come si è mosso l'algoritmo -> difficile
 - algoritmi per la stima di k -> studio e confronto     
 
 LOW

@@ -37,7 +37,7 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     hist, bins = utility.histogram(theta, nbins=numberOfBinsFreedmanDiaconisRuleModified(theta))
 
     # PLOTTING THE SCATTER
-    saver_plots = data_plot.plot_scatter(hist, bins, mode=2)
+    saver_plots.append(data_plot.plot_scatter(hist, bins, mode=2))
     # data_plot.plot_hist(hist, bins)
     # data_plot.plot_linespace(theta)
     # //////////////////////////////////////////////////////////////////
@@ -51,14 +51,14 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     data_plot.plot_hist(hist_smoothed_weighted, bins)
     '''
 
-    clusters, thetaLabels, centroids = histogram_clustering_hierarchical.hierarchicalDetectionOfClusters(hist, bins, samples, theta)
+    clusters, thetaLabels, centroids = histogram_clustering_hierarchical.hierarchicalDetectionOfClusters(hist, bins, samples, theta, saver_plots)
     # gaussian_mixture_model.mixtureOfGaussiansManual(len(clusters), bins, theta)
-    gaussianMixtureLabels = gaussian_mixture_model.mixtureOfGaussiansAutomatic(len(clusters), bins, samples, theta)
+    # gaussianMixtureLabels = gaussian_mixture_model.mixtureOfGaussiansAutomatic(len(clusters), bins, samples, theta)
 
     # print(clusters)
 
     # PLOTTING THE THETA WITH COLOURS
-    # data_plot.plot_circle(theta, thetaLabels)
+    saver_plots.append(data_plot.plot_circle(theta, thetaLabels))
 
     # return (thetaLabels, gaussianMixtureLabels)
-    return gaussianMixtureLabels + 1, saver_plots
+    return thetaLabels + 1, saver_plots
