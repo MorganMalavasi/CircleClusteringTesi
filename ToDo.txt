@@ -1,10 +1,15 @@
 CRITICAL
+- overleaf inizio tesi -> condivido
+    - cap 1     
 - costruire un risultato finale che mostri come si è comportato l'algoritmo in generale
-
+- calcolo k -> calcolare stime rispetto al k fornito 
+- problema parallelizzazione on demand matrice dei pesi
 
 HIGH
 - riguardare algo della rotazione per trovare l'intervallo piu lungo e ruotare meglio i valori 
     - devono ruotare anche per la mistura di gaussiane
+- variazione analisi al variare numero sample, features, numero di classi 
+- misurazione tempi sperimentali + errori rispetto alla stima di k 
 
 
 MEDIUM
@@ -19,19 +24,5 @@ LOW
 - discretizzazione dei valori tra [0, 2pi] nel core dell'algoritmo
 
 
-
-
-
-
-
-
-
-- overleaf inizio tesi -> condivido
-    - cap 1     
-- calcolo k -> calcolare stime rispetto al k fornito 
-- problema parallelizzazione on demand matrice dei pesi
-
-- variazione analisi al variare numero sample, features, numero di classi 
-- misurazione tempi sperimentali + errori rispetto alla stima di k 
 
 
