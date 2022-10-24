@@ -6,6 +6,7 @@ CRITICAL
 - rendere gli indici veloci (complesso su R)
 
 HIGH
+- creare una mistura di gaussiane basata solo su k trovato con l'algoritmo delle aree
 - riguardare algo della rotazione per trovare l'intervallo piu lungo e ruotare meglio i valori 
     - devono ruotare anche per la mistura di gaussiane
 - variazione analisi al variare numero sample, features, numero di classi 
@@ -13,14 +14,12 @@ HIGH
 
 
 MEDIUM
+- discretizzazione dei valori tra [0, 2pi] nel core dell'algoritmo
 - algoritmi per la stima di k -> studio e confronto     
 
 LOW
 - implementazione della gaussiana di smoothing
-
 - rendere il cancolo degli indici parallelo tra di loro
-
-- discretizzazione dei valori tra [0, 2pi] nel core dell'algoritmo
 
 
 

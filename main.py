@@ -60,7 +60,7 @@ def main():
             X = benchmark.data
             y_true = benchmark.labels[0]
         
-            if len(X) > 5000:       # max limit size of points
+            if len(X) > 400:       # max limit size of points
                 continue
             
             correct_number_of_clusters = max(y_true)
@@ -78,6 +78,7 @@ def main():
                         dataset_name = eachDatasetName, 
                         isExample=True
                     ), 
+                    y_true,
                     "",
                     None,
                     None,
@@ -204,7 +205,8 @@ def executeClusteringFunction(number, X, dataset_name, figures, correct_number_o
             algorithm_name = name, 
             comment =  "Score algorithm : adjusted_rand_score = {1} , adjusted_mutual_info_score = {2}".format(res[1], round(adjusted_rand_score, 4), round(adjusted_mutual_info_score, 4)),
             isExample = False
-        ), 
+        ),
+        res,
         "Score algorithm : adjusted_rand_score = {1} , adjusted_mutual_info_score = {2}".format(res[1], round(adjusted_rand_score, 4), round(adjusted_mutual_info_score, 4)), 
         adjusted_rand_score,
         adjusted_mutual_info_score,

@@ -291,9 +291,9 @@ def print_results_total_datasets(results):
             score = tuple_result_alg[1]
             if scoreCircleClustering > score:
                 counter += 1
-                
+
         percentual = round((counter/table_rand_score.shape[0]) * 100, 2)
-        strings.append("<h3 style=\"padding-left: 45;\">The algorithm beated {0} {1}".format(nameAlgorithmEvaluated, percentual) + "%" + " of the times></h3>\n")
+        strings.append("<h3 style=\"padding-left: 45;\">The algorithm beated {0} {1}".format(nameAlgorithmEvaluated, percentual) + "%" + " of the times</h3>\n")
     return strings
         
 def build_table_results(results):

@@ -338,6 +338,7 @@ def drawMixtureOfGaussians(theta, bins, gmm):
 
 def figures_to_html(figs, batteryname="dashboard.html"): 
     counter = 0
+    guessed = []
 
     if not os.path.exists("../dashboards/" + batteryname):
         os.makedirs("../dashboards/" + batteryname)
@@ -359,20 +360,28 @@ def figures_to_html(figs, batteryname="dashboard.html"):
             
             # looping on the algorithm results foreach dataset
             info = []
+            guess = None
+            to_guess = None
             for fig in eachDataset[0]:
                 name = fig[0]
                 figure = fig[1]
-                comment = fig[2]
-                adjusted_rand_score = fig[3]
-                adjusted_mutual_info_score = fig[4]
-                plots = fig[5]
+                labels = fig[2]
+                comment = fig[3]
+                adjusted_rand_score = fig[4]
+                adjusted_mutual_info_score = fig[5]
+                plots = fig[6]
 
                 inner_html = figure.to_html().split('<body>')[1].split('</body>')[0]
                 dashboard.write(inner_html)
                 dashboard.write("<h4 style=\"padding-left: 45;\">{0}</h4>\n".format(comment))
+                if name == None:
+                    guess = labels 
+
                 if name == "CircleClustering":
+                    to_guess = labels
                     dashboard.write("<a style=\"padding-left: 45;\" href=\"fcps/" + str(counter) + ".html\" target=\"_blank\">Show job</a>")
                     fileJob = "../dashboards/" + batteryname + "/" + str(counter) + ".html"
+                    
                     with open(fileJob, 'w') as job:
                         job.write("<html><head></head><body>" + "\n")
                         job.write("<h2 style=\"padding-left: 45;\">Dataset name => {0}</h2>\n".format(nameDataset))
@@ -383,7 +392,9 @@ def figures_to_html(figs, batteryname="dashboard.html"):
                             job.write(inner_html)
 
                         job.write("</body></html>" + "\n")
+                
                 info.append((name, adjusted_rand_score, adjusted_mutual_info_score))
+            guessed.append((guess, to_guess))
             counter += 1
 
             # printing the results of the dataset
@@ -400,4 +411,16 @@ def figures_to_html(figs, batteryname="dashboard.html"):
         strings = utility.print_results_total_datasets(results)
         for compares in strings:
             dashboard.write(compares)
+        
+        dashboard.write("<HR WIDTH=\"100%\" COLOR=\"#000000\" SIZE=\"2\">")
+        count_correctly_guessed = 0
+        count_total = 0
+        for guess in guessed:
+            x = guess[0]
+            y = guess[1]
+            if max(x) == max(y):
+                count_correctly_guessed += 1
+            count_total += 1 
+        dashboard.write("<h3 style=\"padding-left: 45;\"><u>The algorithm of CircleClustering guessed the number of classes in {0} of {1} datasets</u></h3>".format(count_correctly_guessed, count_total))
+        
         dashboard.write("</body></html>" + "\n")
