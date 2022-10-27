@@ -2,7 +2,8 @@ import os
 import numpy as np
 import statistics
 import matplotlib.pyplot as plt
-import cclustering_cpu as cc
+import cclustering.cclustering_cpu as c_cpu
+import cclustering.cclustering_gpu as c_gpu
 import data_plot
 import utility, histogram_clustering_hierarchical, gaussian_mixture_model
 from rich.console import Console
@@ -22,10 +23,14 @@ def CircleClustering(samples, labels = None, n_dataset = None):
 
     saver_plots = []
 
+    # CPU 
     numberOfSamplesInTheDataset = samples.shape[0]
     theta = 2 * PI * np.random.rand(numberOfSamplesInTheDataset)
-    matrixOfWeights, S, C = cc.computing_weights(samples, theta, cosine = False)
-    theta = cc.loop(matrixOfWeights, theta, S, C, 0.001)
+    matrixOfWeights, S, C = c_cpu.computing_weights(samples, theta, cosine = False)
+    theta = c_cpu.loop(matrixOfWeights, theta, S, C, 0.001)
+
+    # GPU
+
 
     # //////////////////////////////////////////////////////////////////
     # PLOTTING PCA

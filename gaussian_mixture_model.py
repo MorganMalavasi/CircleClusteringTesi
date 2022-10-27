@@ -1,6 +1,5 @@
 import sys
 from random import sample
-from tkinter import N
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import chain
