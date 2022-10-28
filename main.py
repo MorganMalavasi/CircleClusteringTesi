@@ -68,33 +68,28 @@ def main():
             print("- {0}".format(eachDatasetName))
             print("Dataset size {0}".format(len(X)))
 
-            try:
-                figures = []
-                figures.append((
-                    None,
-                    data_plot.doPCA(
-                        X = X, 
-                        labels = y_true, 
-                        dataset_name = eachDatasetName, 
-                        isExample=True
-                    ), 
-                    y_true,
-                    "",
-                    None,
-                    None,
-                    None
-                    )
-                )
-
-                for i in range(10):
-                    executeClusteringFunction(i+1, X, eachDatasetName, figures, correct_number_of_clusters, y_true)
-
-                all_figures.append((figures, eachDatasetName, X.shape[0], X.shape[1], correct_number_of_clusters))
             
-            except Exception:
-                print("Si è verificata un'eccezione : ")
-                print(Exception)
-                continue
+            figures = []
+            figures.append((
+                None,
+                data_plot.doPCA(
+                    X = X, 
+                    labels = y_true, 
+                    dataset_name = eachDatasetName, 
+                    isExample=True
+                ), 
+                y_true,
+                "",
+                None,
+                None,
+                None
+                )
+            )
+
+            for i in range(10):
+                executeClusteringFunction(i+1, X, eachDatasetName, figures, correct_number_of_clusters, y_true)
+
+            all_figures.append((figures, eachDatasetName, X.shape[0], X.shape[1], correct_number_of_clusters))
         
         data_plot.figures_to_html(all_figures, eachBatteryName)
         break

@@ -26,11 +26,13 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     # CPU 
     numberOfSamplesInTheDataset = samples.shape[0]
     theta = 2 * PI * np.random.rand(numberOfSamplesInTheDataset)
+    # if samples.shape[0] < 15000:
     matrixOfWeights, S, C = c_cpu.computing_weights(samples, theta, cosine = False)
-    theta = c_cpu.loop(matrixOfWeights, theta, S, C, 0.001)
-
-    # GPU
-
+    theta = c_cpu.loop(matrixOfWeights, theta, S, C, eps = 0.001)
+    # else:
+    S, C = c_cpu.computing_weights_memory_aware(samples, theta, cosine = False)
+    
+        
 
     # //////////////////////////////////////////////////////////////////
     # PLOTTING PCA
