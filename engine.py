@@ -27,15 +27,18 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     # CPU 
     numberOfSamplesInTheDataset = samples.shape[0]
     theta = 2 * PI * np.random.rand(numberOfSamplesInTheDataset)
-    # if samples.shape[0] < 15000:
-    matrixOfWeights, S, C = c_cpu.computing_weights(samples, theta, cosine = False)
-    theta = c_cpu.loop(matrixOfWeights, theta, S, C, eps = 0.001)
-    # else:
-    Snew, Cnew = c_cpu.computing_weights_memory_aware(samples, theta, cosine = False)
+    theta_method1 = np.copy(theta)
+    theta_method2 = np.copy(theta)
     
-    
-        
+    matrixOfWeights, S, C = c_cpu.computing_weights(samples, theta_method1, cosine = False)
+    Snew, Cnew = c_cpu.computing_weights_memory_aware(samples, theta_method2, cosine = False)
 
+    print(utils.areEqual(Snew, S, 0.000001))
+
+    theta_method1 = c_cpu.loop(matrixOfWeights, theta_method1, S, C, eps = 0.001)
+    theta_method2 = c_cpu.loop_memory_aware(samples, theta_method2, S, C, eps = 0.001)
+    
+    
     # //////////////////////////////////////////////////////////////////
     # PLOTTING PCA
     # data_plot.doPCA(samples, labels, n_dataset)
