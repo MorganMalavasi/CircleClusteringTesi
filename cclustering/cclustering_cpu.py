@@ -75,36 +75,35 @@ def jit_elementwise_multiplication(line_weights, C, S, theta, k, old):
 '''
 
 def computing_weights_memory_aware(dataset, theta, cosine = False):
-    if cosine == False:
-        weights = euclidean_distances(dataset, dataset)
-    else :
-        weights = cosine_distances(dataset, dataset)
-    
-    print(linalg.norm(weights))
-    
-    weights = weights / linalg.norm(weights)
-
-    S, C = C_S_memory_aware(dataset, weights, theta)
+    S, C = C_S_memory_aware(dataset, theta)
     return S, C
 
 # @jit
-def C_S_memory_aware(dataset, matrixOfWeights, theta):
+def C_S_memory_aware(dataset, theta):
     sin_t = np.sin(theta)
-    S = np.dot(matrixOfWeights, sin_t)
+    weights = euclidean_distances(dataset, dataset)
+    
+    
+    for row in range(dataset.shape[0]):
+        l_weights = line_weights(dataset, row)
+        # print(areEqual(l_weights, weights[row], 0.000001))
+    
+
+    
+    '''
+    S = np.dot(weights, sin_t)      # -> original without linalg.norm
     
     Snew = np.empty(theta.shape[0])
     for i in range(Snew.shape[0]):
         # compute line of weights
-        continue
+        S[i] = np.dot(line_weights(dataset, i), sin_t)
 
-        
-        
-
-
-    cos_t = np.cos(theta)
-    C = np.dot(matrixOfWeights, cos_t)
+    print(S)
+    print(Snew)
+    print((S == Snew).all())
+    '''
     
-    return S, C
+    return None, None
 
 def line_weights(dataset, row):
     line = np.empty(dataset.shape[0])
@@ -115,3 +114,66 @@ def line_weights(dataset, row):
 
 def dist(x, y):
     return np.sqrt(np.dot(x, x) - 2 * np.dot(x, y) + np.dot(y, y))
+
+def areEqual(arr1, arr2, error):
+    N = arr1.shape[0]
+    M = arr2.shape[0]
+    # If lengths of array are not
+    # equal means array are not equal
+    if (N != M):
+        print("Different sizes")
+        return False
+ 
+    # Linearly compare elements
+    for i in range(0, N):
+        if abs(abs(arr1[i]) - abs(arr2[i])) > error :
+            print(abs(abs(arr1[i]) - abs(arr2[i])))
+            print("index = i:{0}".format(i))
+            return False
+ 
+    # If all elements were same.
+    return True
+
+def areEqualPrecise(arr1, arr2):
+    N = arr1.shape[0]
+    M = arr2.shape[0]
+    # If lengths of array are not
+    # equal means array are not equal
+    if (N != M):
+        print("Different sizes")
+        return False
+ 
+    # Linearly compare elements
+    for i in range(0, N):
+        if (arr1[i] != arr2[i]):
+            print("Position = {0}".format(i))
+            print(arr1[i])
+            print(arr2[i])
+            return False
+ 
+    # If all elements were same.
+    return True
+
+def checkResultsMatrixWeights(array1, array2, error):
+    '''
+    if array1.shape[0] != array2.shape[0]:
+        return False
+    '''
+    sizeMatrix = array1.shape[0]
+    for i in range(sizeMatrix):
+        for j in range(sizeMatrix):
+            if abs(abs(array1[i, j]) - abs(array2[i, j])) > error :
+                print(abs(abs(array1[i, j]) - abs(array2[i, j])))
+                print("index = i:{0} j:{1}".format(i,j))
+                return False
+    return True
+
+def checkResultsMatrixPrecise(matrix1, matrix2):
+    row = matrix1.shape[0]
+    col = matrix2.shape[1]
+    for i in range(row):
+        for j in range(col):
+            if matrix1[i, j] != matrix2[i, j]:
+                print("difference == 1) {0}    2) {1}".format(matrix1[i, j], matrix2[i, j]))
+                return False
+    return True

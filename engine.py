@@ -30,7 +30,7 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     matrixOfWeights, S, C = c_cpu.computing_weights(samples, theta, cosine = False)
     theta = c_cpu.loop(matrixOfWeights, theta, S, C, eps = 0.001)
     # else:
-    S, C = c_cpu.computing_weights_memory_aware(samples, theta, cosine = False)
+    Snew, Cnew = c_cpu.computing_weights_memory_aware(samples, theta, cosine = False)
     
         
 

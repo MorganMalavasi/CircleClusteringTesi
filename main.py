@@ -90,7 +90,7 @@ def main():
                 executeClusteringFunction(i+1, X, eachDatasetName, figures, correct_number_of_clusters, y_true)
 
             all_figures.append((figures, eachDatasetName, X.shape[0], X.shape[1], correct_number_of_clusters))
-        
+            break
         data_plot.figures_to_html(all_figures, eachBatteryName)
         break
 
