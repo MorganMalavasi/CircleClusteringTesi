@@ -1,26 +1,6 @@
 import numpy as np
-
-def convert_f32(a):
-    """
-    Convert to float32 dtype.
-
-    Parameters
-    ----------
-    a : ndarray
-
-    Returns
-    -------
-    out : ndarray
-        Converts to float32 dtype if not already so. This is needed for
-        implementations that work exclusively work such datatype.
-
-    """
-
-    if a.dtype!=np.float32:
-        return a.astype(np.float32)
-    else:
-        return a
-
+import time
+from functools import wraps
 
 def getDataFromGpu(weights, S, C):
     return weights.get(), S.get(), C.get()
@@ -41,41 +21,80 @@ def truncatefloat6digits(n):
 def trunc(a, x):
     int1 = int(a * (10**x))/(10**x)
     return float(int1)
+
+####### checker equality between arrays and matrices #######
+
+def areEqual(arr1, arr2, error):
+    N = arr1.shape[0]
+    M = arr2.shape[0]
+    # If lengths of array are not
+    # equal means array are not equal
+    if (N != M):
+        print("Different sizes")
+        return False
+ 
+    # Linearly compare elements
+    for i in range(0, N):
+        if abs(abs(arr1[i]) - abs(arr2[i])) > error :
+            print(abs(abs(arr1[i]) - abs(arr2[i])))
+            print("index = i:{0}".format(i))
+            return False
+ 
+    # If all elements were same.
+    return True
+
+def areEqualPrecise(arr1, arr2):
+    N = arr1.shape[0]
+    M = arr2.shape[0]
+    # If lengths of array are not
+    # equal means array are not equal
+    if (N != M):
+        print("Different sizes")
+        return False
+ 
+    # Linearly compare elements
+    for i in range(0, N):
+        if (arr1[i] != arr2[i]):
+            print("Position = {0}".format(i))
+            print(arr1[i])
+            print(arr2[i])
+            return False
+ 
+    # If all elements were same.
+    return True
+
+def checkResultsMatrixWeights(array1, array2, error):
+    '''
+    if array1.shape[0] != array2.shape[0]:
+        return False
+    '''
+    sizeMatrix = array1.shape[0]
+    for i in range(sizeMatrix):
+        for j in range(sizeMatrix):
+            if abs(abs(array1[i, j]) - abs(array2[i, j])) > error :
+                print(abs(abs(array1[i, j]) - abs(array2[i, j])))
+                print("index = i:{0} j:{1}".format(i,j))
+                return False
+    return True
+
+def checkResultsMatrixPrecise(matrix1, matrix2):
+    row = matrix1.shape[0]
+    col = matrix2.shape[1]
+    for i in range(row):
+        for j in range(col):
+            if matrix1[i, j] != matrix2[i, j]:
+                print("difference == 1) {0}    2) {1}".format(matrix1[i, j], matrix2[i, j]))
+                return False
+    return True
+
 	
-
-def plot_blobs(X, labels=None, threeD=False, doPCA=True, sizex=1):
-
-	#plt.figure(figsize=(10, 10))
-	#plt.scatter(X[:, 0], X[:, 1], c=l)
-	#plt.title("Blobs")
-	#plt.show()
-
-	if threeD:
-		if PCA:
-			pca = PCA(n_components=3)
-			components = pca.fit_transform(X)
-		else:
-			components = X[:,0:3]  
-		if labels is None:
-			fig = px.scatter_3d(components, x=0, y=1, z=2, title='Blobs 3D', labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'})
-		else:
-			fig = px.scatter_3d(components, x=0, y=1, z=2, color=labels, title='Blobs 3D', labels={'0': 'PC 1', '1': 'PC 2', '2': 'PC 3'})
-	else:
-		if doPCA:
-			pca = PCA(n_components=2)
-			components = pca.fit_transform(X)
-		else:
-			components = X[:,0:2]  
-		if labels is None:
-			fig = px.scatter(components, x=0, y=1, title='Blobs 2D', labels={'0': 'PC 1', '1': 'PC 2'})
-		else:
-			fig = px.scatter(components, x=0, y=1, title='Blobs 2D', color=labels, labels={'0': 'PC 1', '1': 'PC 2'})
-	
-	fig.update_layout(
-		width = 800*sizex,
-		height = 800*sizex,
-		title = "fixed-ratio axes")
-	fig.update_yaxes(
-		scaleanchor = "x",
-		scaleratio = 1)
-	fig.show()  
+def timeit(func):
+    @wraps(func)
+    def timeit_wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print(f'Function {func.__name__} took {total_time:.4f} seconds')
+        return result
+    return timeit_wrapper
