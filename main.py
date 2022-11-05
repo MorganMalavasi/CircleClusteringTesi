@@ -88,7 +88,7 @@ def main():
 
             for i in range(10):
                 executeClusteringFunction(i+1, X, eachDatasetName, figures, correct_number_of_clusters, y_true)
-
+            break
             all_figures.append((figures, eachDatasetName, X.shape[0], X.shape[1], correct_number_of_clusters))
         # data_plot.figures_to_html(all_figures, eachBatteryName)
         break
@@ -109,7 +109,7 @@ def main():
     y_pred[-1] = 3
 
     print(y_true)
-    print(y_pred)
+    print(y_pred) 
 
     print(len(y_true))
     print(len(y_pred))

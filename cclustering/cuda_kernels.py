@@ -45,3 +45,47 @@ __global__ void elementwise_multiplication(float *weights, float *theta, float *
         S[pos] += (weights[idx_weight] * sin);
     }    
 """
+
+
+sklearn_metrics_pairwise_euclidean_distances_kernel = """
+__global__ void sklearn_metrics_pairwise_euclidean_distances(float *mat, float *vec, int size)
+    {
+        int idx = threadIdx.x + blockDim.x * blockIdx.x;
+        
+    }
+"""
+
+dot_prod_gpu_kernel = """
+__global__ void dot_product_kernel(float *x, float *y, float *dot, unsigned int n)
+{
+	unsigned int index = threadIdx.x + blockDim.x * blockIdx.x;
+	unsigned int stride = blockDim.x * gridDim.x;
+
+	__shared__ float cache[32];
+
+	double temp = 0.0;
+	while(index < n){
+		temp += x[index]*y[index];
+
+		index += stride;
+	}
+
+	cache[threadIdx.x] = temp;
+
+	__syncthreads();
+
+	// reduction
+	unsigned int i = blockDim.x/2;
+	while(i != 0){
+		if(threadIdx.x < i){
+			cache[threadIdx.x] += cache[threadIdx.x + i];
+		}
+		__syncthreads();
+		i /= 2;
+	}
+
+	if(threadIdx.x == 0){
+		atomicAdd(dot, cache[0]);
+	}
+}
+"""

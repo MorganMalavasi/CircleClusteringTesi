@@ -29,6 +29,7 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     theta = 2 * PI * np.random.rand(numberOfSamplesInTheDataset)
     theta_method1 = np.copy(theta)
     theta_method2 = np.copy(theta)
+    theta_method3 = np.copy(theta)
     
     matrixOfWeights, S, C = c_cpu.computing_weights(samples, theta_method1, cosine = False)
     Snew, Cnew = c_cpu.computing_weights_memory_aware(samples, theta_method2, cosine = False)
@@ -37,6 +38,8 @@ def CircleClustering(samples, labels = None, n_dataset = None):
 
     theta_method1 = c_cpu.loop(matrixOfWeights, theta_method1, S, C, eps = 0.001)
     theta_method2 = c_cpu.loop_memory_aware(samples, theta_method2, S, C, eps = 0.001)
+    
+    # GPU -> the gpu needs to enter in action when the number of samples is to big for the RAM
     
     
     # //////////////////////////////////////////////////////////////////

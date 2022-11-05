@@ -5,17 +5,21 @@ import pycuda.autoinit
 import pycuda.driver as drv
 import pycuda.gpuarray as gpuarray
 from pycuda.cumath import sqrt as cusqrt
+from operator import mul
+import more_itertools as mit
+import cclustering.utils as utils
 import warnings
 warnings.filterwarnings("ignore")
 
 culinalg.init()
 
 from pycuda.compiler import SourceModule as SM
-from cclustering.cuda_kernels import addvecs_codetext_kernel, diagonal_zeros_kernel, elementwise_multiplication_kernel
+from cclustering.cuda_kernels import addvecs_codetext_kernel, diagonal_zeros_kernel, elementwise_multiplication_kernel, dot_prod_gpu_kernel
 
 addvecs_bcast_gpu = SM(addvecs_codetext_kernel).get_function("add_vectors_broadcast")
 diagonal_zeros_gpu = SM(diagonal_zeros_kernel).get_function("diagonal_zeros")
 elementwise_multiplication = SM(elementwise_multiplication_kernel).get_function("elementwise_multiplication")
+dot_product_gpu = SM(dot_prod_gpu_kernel).get_function("dot_product_kernel")
 
 def computing_weights(dataset, theta):
     matrixOfWeights = sqsum_adddot(dataset, dataset)
@@ -240,3 +244,62 @@ def convert_f32(a):
         return a.astype(np.float32)
     else:
         return a
+
+def computing_S_C_memory_aware_gpu(samples, theta, cosine = False):
+    sin_t = np.sin(theta)
+    cos_t = np.cos(theta)
+
+    Snew = np.empty(theta.shape[0])
+    Cnew = np.empty(theta.shape[0])
+    block = (32, 1, 1)
+    grid_x = (theta.shape[0] +(block[0] - 1)) // block[0]
+    grid_y = 1
+    grid = (grid_x, grid_y)
+    size = np.int32(theta.shape[0])
+    
+    
+    # for i in range(Snew.shape[0]):
+        # compute line of weights in gpu
+        # line_weights = line_weights_function_gpu()
+
+
+
+''' dot product functions '''
+@utils.timeit
+def dot_prod_gpu(a, b, size, blockSize):
+    c = np.zeros(size)
+    c = convert_f32(c)
+
+    a_gpu = gpuarray.to_gpu(a)
+    b_gpu = gpuarray.to_gpu(b)
+    c_gpu = gpuarray.to_gpu(c)
+
+    block = (blockSize, 1, 1)
+    grid_x = (a_gpu.shape[0] + (block[0] - 1)) // block[0]
+    grid_y = 1
+    grid = (grid_x, grid_y)
+    dim = np.int32(size)
+
+    dot_product_gpu(a_gpu, b_gpu, c_gpu, dim, block = block, grid = grid)
+    return c_gpu.get()
+
+
+# dot product with numpy
+@utils.timeit
+def dot_prod_cpu_numpy(x1, x2):
+    return np.dot(x1, x2)
+
+# dot product with sum
+@utils.timeit
+def dot_prod_cpu_sum(a, b):
+    return sum([i*j for (i, j) in zip(a, b)])
+
+# dot product with map
+@utils.timeit
+def dot_prod_cpu_map(a, b):
+    return sum(map(mul, a, b))
+
+# dot product with mit
+@utils.timeit
+def dot_prod_cpu_mit(a, b):
+    return mit.dotproduct(a, b)

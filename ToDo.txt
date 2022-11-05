@@ -3,7 +3,7 @@ CRITICAL
     - cap 1     
 - calcolo k -> calcolare stime rispetto al k fornito 
 - problema parallelizzazione on demand matrice dei pesi
-- calcolare i tempi
+- calcolare i tempi -> output a schermo
 
 
 HIGH
