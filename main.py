@@ -60,8 +60,8 @@ def main():
             X = benchmark.data
             y_true = benchmark.labels[0]
         
-            if len(X) > 5000:       # max limit size of points
-                continue
+            # if len(X) > 5000:       # max limit size of points
+              #   continue
             
             correct_number_of_clusters = max(y_true)
             
@@ -88,7 +88,6 @@ def main():
 
             for i in range(10):
                 executeClusteringFunction(i+1, X, eachDatasetName, figures, correct_number_of_clusters, y_true)
-            break
             all_figures.append((figures, eachDatasetName, X.shape[0], X.shape[1], correct_number_of_clusters))
         # data_plot.figures_to_html(all_figures, eachBatteryName)
         break

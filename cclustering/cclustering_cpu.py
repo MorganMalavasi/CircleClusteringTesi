@@ -1,3 +1,4 @@
+import sys as system
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances, cosine_distances
 from numpy import linalg
@@ -79,13 +80,22 @@ def C_S_memory_aware(dataset, theta):
     sin_t = np.sin(theta)
     cos_t = np.cos(theta)
     
+    '''
     Snew = np.empty(theta.shape[0])
     Cnew = np.empty(theta.shape[0])
+    '''
+    Snew = np.empty((theta.shape[0], theta.shape[0]))
+    Cnew = np.empty((theta.shape[0], theta.shape[0]))
+
     for i in range(Snew.shape[0]):
         # compute line of weights
         line_weights = line_weights_function(dataset, i) 
-        Snew[i] = np.dot(line_weights, sin_t)
-        Cnew[i] = np.dot(line_weights, cos_t)
+        # if i == 0:
+        # print(line_weights)
+        # Snew[i] = np.dot(line_weights, sin_t)
+        # Cnew[i] = np.dot(line_weights, cos_t)
+        Snew[i] = line_weights
+        Cnew[i] = line_weights
     
     return Snew, Cnew
 
@@ -142,9 +152,10 @@ def jit_elementwise_multiplication(line_weights, C, S, theta, k, old):
 def line_weights_function(dataset, row):
     line = np.empty(dataset.shape[0])
     for i in range(dataset.shape[0]):
-        line[i] = dist(dataset[row], dataset[i])
+        line[i] = dist(dataset[row], dataset[i], i = i, row = row)    
     return line
 
 @jit
-def dist(x, y):
+def dist(x, y, i = None, row = None):
     return np.sqrt(np.dot(x, x) - 2 * np.dot(x, y) + np.dot(y, y))
+

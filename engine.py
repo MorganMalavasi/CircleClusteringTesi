@@ -27,20 +27,13 @@ def CircleClustering(samples, labels = None, n_dataset = None):
     # CPU 
     numberOfSamplesInTheDataset = samples.shape[0]
     theta = 2 * PI * np.random.rand(numberOfSamplesInTheDataset)
-    theta_method1 = np.copy(theta)
-    theta_method2 = np.copy(theta)
-    theta_method3 = np.copy(theta)
     
-    matrixOfWeights, S, C = c_cpu.computing_weights(samples, theta_method1, cosine = False)
-    Snew, Cnew = c_cpu.computing_weights_memory_aware(samples, theta_method2, cosine = False)
-
-    print(utils.areEqual(Snew, S, 0.000001))
-
-    theta_method1 = c_cpu.loop(matrixOfWeights, theta_method1, S, C, eps = 0.001)
-    theta_method2 = c_cpu.loop_memory_aware(samples, theta_method2, S, C, eps = 0.001)
-    
-    # GPU -> the gpu needs to enter in action when the number of samples is to big for the RAM
-    
+    if samples.shape[0] < 15000:
+        matrixOfWeights, S, C = c_cpu.computing_weights(samples, theta, cosine = False)
+        theta = c_cpu.loop(matrixOfWeights, theta, S, C, eps = 0.001)
+    else:   # compute using the GPU
+        S_gpu, C_gpu = c_gpu.computing_S_C_memory_aware_gpu(samples, theta)    
+        theta = c_gpu.loop_memory_aware_gpu(samples, theta, S, C, eps = 0.001)
     
     # //////////////////////////////////////////////////////////////////
     # PLOTTING PCA

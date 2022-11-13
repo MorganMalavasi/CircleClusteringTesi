@@ -47,13 +47,35 @@ __global__ void elementwise_multiplication(float *weights, float *theta, float *
 """
 
 
-sklearn_metrics_pairwise_euclidean_distances_kernel = """
-__global__ void sklearn_metrics_pairwise_euclidean_distances(float *mat, float *vec, int size)
-    {
-        int idx = threadIdx.x + blockDim.x * blockIdx.x;
-        
+line_of_weights_gpu_kernel = """
+__global__ void line_of_weights_kernel(float *mat, int whereAmI, float *out, const int numberOfSamples, unsigned int features)
+{
+    int idx = threadIdx.x + blockDim.x * blockIdx.x;
+    if (idx >= numberOfSamples)
+        return;
+    
+    // (x, x)
+    float res1 = 0;
+    for (int i=0; i<features; i++){
+        res1 += mat[whereAmI * features + i] * mat[whereAmI * features + i];
     }
+
+    // (x, y)
+    float res2 = 0;
+    for (int i=0; i<features; i++){
+        res2 += mat[whereAmI * features + i] * mat[idx * features + i];
+    }
+
+    // (y, y)
+    float res3 = 0;
+    for (int i=0; i<features; i++){
+        res3 += mat[idx * features + i] * mat[idx * features + i];
+    }
+
+    out[idx] = sqrt(res1 - 2*res2 + res3);
+}
 """
+
 
 dot_prod_gpu_kernel = """
 __global__ void dot_product_kernel(float *x, float *y, float *dot, unsigned int n)
